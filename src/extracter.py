@@ -22,6 +22,18 @@ from detectron2.utils.visualizer import Visualizer
 from detectron2.data import MetadataCatalog
 import torchvision
 from fid_score import *
+from config import get_arguments
+from SinGAN.manipulate import *
+from SinGAN.training import *
+from SinGAN.imresize import imresize
+from SinGAN.imresize import imresize_to_shape
+import SinGAN.functions as functions
+import torch
+from skimage import measure
+import argparse
+import imutils
+import cv2
+import cv2
 fid = FidScore(paths, device, batch_size)
 score = fid.calculate_fid_score()
 paths = ['/home/user/Desktop/SinGAN-master/now/a', '/home/user/Desktop/SinGAN-master/now/b']
@@ -147,15 +159,6 @@ for i in range(185):
 cv2.destroyAllWindows()
 out.release()
 
-from config import get_arguments
-from SinGAN.manipulate import *
-from SinGAN.training import *
-from SinGAN.imresize import imresize
-from SinGAN.imresize import imresize_to_shape
-import SinGAN.functions as functions
-import torch
-import cv2
-
 if __name__ == '__main__':
     parser = get_arguments("")
     parser.add_argument('--input_dir', help='input image dir', default='/home/user/Desktop/phd_work/SinGAN-master/images')
@@ -234,11 +237,6 @@ if __name__ == '__main__':
             out = SinGAN_generate(Gs[n:], Zs[n:], reals, NoiseAmp[n:], opt, in_s, n=n, num_samples=1)
             out = (1-mask)*real+mask*out
             plt.imsave('%s/start_scale=%d.png' % (dir2save,opt.inpainting_start_scale), functions.convert_image_np(out.detach()), vmin=0, vmax=1)
-
-from skimage import measure
-import argparse
-import imutils
-import cv2
 ap = argparse.ArgumentParser("")
 ap.add_argument("-f", "--first", required=True, help="Directory of the image that will be compared", default = "/home/user/Desktop/phd_work/now/a.png")
 ap.add_argument("-s", "--second", required=True, help="Directory of the image that will be used to compare", default="/home/user/Desktop/phd_work/now/SinGAN1.png")
