@@ -10,10 +10,38 @@
 | OURS | 32.98   | 0.94   |
 
 
-| Method | PSNR    | SSIM    | aa|
+|  | Frame 50    | Frame 100    | Frame 150|
 | :---:   | :---: | :---: | :---: |
-| VINet   | 28.47 | 0.9222 |  0.9222 |
-| DFGVI | 30.28   | 0.925   | 0.9222 |
+| Video 1   | 0.9377 | 0.9358 |  0.9383 |
+| Video 2 | 0.9365   | 0.9389   | 0.9374 |
+
+
+Frame 50 Frame 100 Frame150
+Video 1 0.9377 0.9358 0.9383
+Video 2 0.9365 0.9389 0.9374
+Table 3: Here the frame difference of 50, 100 and 150 frames
+of input video with previous frame of inpainted video is
+shown.
+frame difference-SSIM
+frame 50 Frame 100 Frame150
+Video 1 0.4504 0.4445 0.4603
+Video 2 0.4386 0.4465 0.4532
+FUTURE WORK
+We will address the problem of handing complex textures
+by adjusting the network structure and also try to introduce
+a deeper network for this model to capture the training image
+distribution better. We will also improve it for other manip-
+ulation tasks.
+References
+SupplementaryMaterials. 2022. :[Online] Available.
+https://github.com/Rishabh-Shuklaa/suplimentry. Accessed:
+16/09/2022.
+Shaham, T. R., Dekel, T., Michaeli, T.Singan: Learning a
+generative model from a single natural image. In Proceed-
+ings of the IEEE International Conference on Computer
+Vision (pp. 4570-4580) (2019).
+
+
 
 # REFERENCES
 1:Kim, D., Woo, S., Lee, J.Y., Kweon, I.S.: Deep video inpainting. In: CVPR. pp. 5792–5801 (2019).<br /><br />
