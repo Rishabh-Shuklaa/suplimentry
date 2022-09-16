@@ -12,8 +12,7 @@ import cv2
 def train(opt,Gs,Zs,reals,NoiseAmp):
     real_ = functions.read_image(opt)
     if opt.inpainting:
-        # mask = torch.ones(real_.shape[0], real_.shape[1], real_.shape[2], real_.shape[3])
-        # mask[:,:,opt.hl:opt.hh,opt.wl:opt.wh] = 0
+       
         mask = cv2.imread('%s/%s_mask%s' % (opt.ref_dir,opt.input_name[:-4],opt.input_name[-4:]))
         mask = torch.from_numpy(1-mask/255)
         mask = mask[:, :, :, None]
@@ -38,8 +37,7 @@ def train(opt,Gs,Zs,reals,NoiseAmp):
         except OSError:
                 pass
 
-        #plt.imsave('%s/in.png' %  (opt.out_), functions.convert_image_np(real), vmin=0, vmax=1)
-        #plt.imsave('%s/original.png' %  (opt.out_), functions.convert_image_np(real_), vmin=0, vmax=1)
+       
         plt.imsave('%s/real_scale.png' %  (opt.outf), functions.convert_image_np(reals[scale_num]), vmin=0, vmax=1)
 
         if opt.inpainting and opt.partial:
@@ -115,9 +113,6 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None):
             noise_ = functions.generate_noise([opt.nc_z,opt.nzx,opt.nzy], device=opt.device)
             noise_ = m_noise(noise_)
 
-        ############################
-        # (1) Update D network: maximize D(x) + D(G(z))
-        ###########################
         for j in range(opt.Dsteps):
             # train with real
             netD.zero_grad()
@@ -126,12 +121,10 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None):
                 output = netD(mask*real).to(opt.device)
             else:
                 output = netD(real).to(opt.device)
-            #D_real_map = output.detach()
             errD_real = -output.mean()#-a
             errD_real.backward(retain_graph=True)
             D_x = -errD_real.item()
 
-            # train with fake
             if (j==0) & (epoch == 0):
                 if (Gs == []) & (opt.mode != 'SR_train'):
                     prev = torch.full([1,opt.nc_z,opt.nzx,opt.nzy], 0, device=opt.device)
@@ -187,9 +180,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None):
 
         errD2plot.append(errD.detach())
 
-        ############################
-        # (2) Update G network: maximize D(G(z))
-        ###########################
+     
 
         for j in range(opt.Gsteps):
             netG.zero_grad()
@@ -229,13 +220,7 @@ def train_single_scale(netD,netG,reals,Gs,Zs,in_s,NoiseAmp,opt,centers=None):
         if epoch % 500 == 0 or epoch == (opt.niter-1):
             plt.imsave('%s/fake_sample.png' %  (opt.outf), functions.convert_image_np(fake.detach()), vmin=0, vmax=1)
             plt.imsave('%s/G(z_opt).png'    % (opt.outf),  functions.convert_image_np(netG(Z_opt.detach(), z_prev).detach()), vmin=0, vmax=1)
-            #plt.imsave('%s/D_fake.png'   % (opt.outf), functions.convert_image_np(D_fake_map))
-            #plt.imsave('%s/D_real.png'   % (opt.outf), functions.convert_image_np(D_real_map))
-            #plt.imsave('%s/z_opt.png'    % (opt.outf), functions.convert_image_np(z_opt.detach()), vmin=0, vmax=1)
-            #plt.imsave('%s/prev.png'     %  (opt.outf), functions.convert_image_np(prev), vmin=0, vmax=1)
-            #plt.imsave('%s/noise.png'    %  (opt.outf), functions.convert_image_np(noise), vmin=0, vmax=1)
-            #plt.imsave('%s/z_prev.png'   % (opt.outf), functions.convert_image_np(z_prev), vmin=0, vmax=1)
-
+           
 
             torch.save(z_opt, '%s/z_opt.pth' % (opt.outf))
 
@@ -302,8 +287,7 @@ def train_paint(opt,Gs,Zs,reals,NoiseAmp,centers,paint_inject_scale):
             except OSError:
                     pass
 
-            #plt.imsave('%s/in.png' %  (opt.out_), functions.convert_image_np(real), vmin=0, vmax=1)
-            #plt.imsave('%s/original.png' %  (opt.out_), functions.convert_image_np(real_), vmin=0, vmax=1)
+           
             plt.imsave('%s/in_scale.png' %  (opt.outf), functions.convert_image_np(reals[scale_num]), vmin=0, vmax=1)
 
             D_curr,G_curr = init_models(opt)
@@ -332,7 +316,6 @@ def train_paint(opt,Gs,Zs,reals,NoiseAmp,centers,paint_inject_scale):
 
 def init_models(opt):
 
-    #generator initialization:
     if opt.inpainting and opt.partial:
         netG = models.GeneratorConcatSkip2CleanAddPartial(opt).to(opt.device)
     else:
@@ -342,12 +325,13 @@ def init_models(opt):
         netG.load_state_dict(torch.load(opt.netG))
     print(netG)
 
-    #discriminator initialization:
     if opt.inpainting and opt.partial:
         netD = models.WDiscriminatorPartial(opt).to(opt.device)
     else:
         netD = models.WDiscriminator(opt).to(opt.device)
-    netD.apply(models.weights_init)
+    netD.apply(models.weights_init)    #discriminator initialization:
+329
+
     if opt.netD != '':
         netD.load_state_dict(torch.load(opt.netD))
     print(netD)
