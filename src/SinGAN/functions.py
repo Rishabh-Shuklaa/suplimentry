@@ -16,13 +16,6 @@ from sklearn.cluster import KMeans
 
 from functools import reduce
 
-
-# custom weights initialization called on netG and netD
-
-"""def read_image(opt):
-    x = img.imread('%s%s' % (opt.input_dir,opt.input_name))
-    return np2torch(x)"""
-
 def denorm(x):
     out = (x + 1) / 2
     return out.clamp(0, 1)
@@ -30,15 +23,6 @@ def denorm(x):
 def norm(x):
     out = (x -0.5) *2
     return out.clamp(-1, 1)
-
-#def denorm2image(I1,I2):
-#    out = (I1-I1.mean())/(I1.max()-I1.min())
-#    out = out*(I2.max()-I2.min())+I2.mean()
-#    return out#.clamp(I2.min(), I2.max())
-
-#def norm2image(I1,I2):
-#    out = (I1-I2.mean())*2
-#    return out#.clamp(I2.min(), I2.max())
 
 def convert_image_np(inp):
     if inp.shape[1]==3:
@@ -71,9 +55,7 @@ def save_image(real_cpu,receptive_feild,ncs,epoch_num,file_name):
 def convert_image_np_2d(inp):
     inp = denorm(inp)
     inp = inp.numpy()
-    # mean = np.array([x/255.0 for x in [125.3,123.0,113.9]])
-    # std = np.array([x/255.0 for x in [63.0,62.1,66.7]])
-    # inp = std*
+    
     return inp
 
 def generate_noise(size,num_samp=1,device='cuda',type='gaussian', scale=1):
@@ -92,8 +74,7 @@ def plot_learning_curves(G_loss,D_loss,epochs,label1,label2,name):
     fig,ax = plt.subplots(1)
     n = np.arange(0,epochs)
     plt.plot(n,G_loss,n,D_loss)
-    #plt.title('loss')
-    #plt.ylabel('loss')
+    
     plt.xlabel('epochs')
     plt.legend([label1,label2],loc='upper right')
     plt.savefig('%s.png' % name)
@@ -127,10 +108,9 @@ def move_to_cpu(t):
     return t
 
 def calc_gradient_penalty(netD, real_data, fake_data, LAMBDA, device, mask = None):
-    #print real_data.size()
     alpha = torch.rand(1, 1)
     alpha = alpha.expand(real_data.size())
-    alpha = alpha.to(device)#cuda() #gpu) #if use_cuda else alpha
+    alpha = alpha.to(device)
 
     interpolates = alpha * real_data + ((1 - alpha) * fake_data)
 
@@ -143,10 +123,8 @@ def calc_gradient_penalty(netD, real_data, fake_data, LAMBDA, device, mask = Non
         disc_interpolates = netD(interpolates)
 
     gradients = torch.autograd.grad(outputs=disc_interpolates, inputs=interpolates,
-                              grad_outputs=torch.ones(disc_interpolates.size()).to(device),#.cuda(), #if use_cuda else torch.ones(
-                                  #disc_interpolates.size()),
+                              grad_outputs=torch.ones(disc_interpolates.size()).to(device),
                               create_graph=True, retain_graph=True, only_inputs=True)[0]
-    #LAMBDA = 1
     gradient_penalty = ((gradients.norm(2, dim=1) - 1) ** 2).mean() * LAMBDA
     return gradient_penalty
 
@@ -235,7 +213,6 @@ def creat_reals_pyramid(real,reals,opt):
 
 
 def load_trained_pyramid(opt, mode_='train'):
-    #dir = 'TrainedModels/%s/scale_factor=%f' % (opt.input_name[:-4], opt.scale_factor_init)
     mode = opt.mode
     opt.mode = 'train'
     if (mode == 'animation_train') | (mode == 'SR_train') | (mode == 'paint_train'):
@@ -289,7 +266,6 @@ def generate_dir2save(opt):
     return dir2save
 
 def post_config(opt):
-    # init fixed parameters
     opt.device = torch.device("cpu" if opt.not_cuda else "cuda:0")
     opt.niter_init = opt.niter
     opt.noise_amp_init = opt.noise_amp
