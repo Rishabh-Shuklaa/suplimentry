@@ -1,3 +1,4 @@
+<pre>
 | Method | PSNR    | SSIM    |
 | :---:   | :---: | :---: |
 | VINet   | 28.47 | 0.9222 |
@@ -9,12 +10,10 @@
 | TSAM   | 31.50|0.934 |
 | OURS | 32.98   | 0.94   |
 
-<pre>
-hello, this is
-   just an     example
-....
-</pre>
 
+
+
+</pre>
 |  | Frame 50    | Frame 100    | Frame 150|
 | :---:   | :---: | :---: | :---: |
 | Video 1   | 0.9377 | 0.9358 |  0.9383 |
