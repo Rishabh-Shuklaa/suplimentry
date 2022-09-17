@@ -159,6 +159,8 @@ for i in range(185):
 cv2.destroyAllWindows()
 out.release()
 
+
+#a.py content
 if __name__ == '__main__':
     parser = get_arguments("")
     parser.add_argument('--input_dir', help='input image dir', default='/home/user/Desktop/phd_work/SinGAN-master/images')
@@ -169,10 +171,6 @@ if __name__ == '__main__':
     parser.add_argument('--radius', help='radius harmonization', type=int, default = 10)
     parser.add_argument('--multiple_holes', help = 'set true for multiple holes', action = "store_true")
     parser.add_argument('--ref_name', help='training image name', type = str, default = "")
-    """parser.add_argument('--hl', default=0, type=int)
-    parser.add_argument('--hh', default=0, type=int)
-    parser.add_argument('--wl', default=0, type=int)
-    parser.add_argument('--wh', default=0, type=int)"""
     opt = parser.parse_args("")
     opt = functions.post_config(opt)
     if opt.ref_name =="":
