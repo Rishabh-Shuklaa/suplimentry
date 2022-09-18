@@ -1,3 +1,4 @@
+<p align="center">
 
 | Method | PSNR    | SSIM    |
 | :---:   | :---: | :---: |
@@ -34,3 +35,4 @@
 <a id="1">[5]</a> Chang, Y.L., Liu, Z.Y., Lee, K.Y., Hsu, W.: Free-form video inpainting with 3D gated convolution and temporal PatchGAN. In: ICCV. pp. 9066–9075 (2019).<br /><br />
 <a id="1">[6]</a> Zeng, Y., Fu, J., Chao, H.: Learning joint spatial-temporal transformations for video inpainting. In: ECCV. pp. 528–543 (2020).<br /><br />
 <a id="1">[7]</a> Zou, X., Yang, L., Liu, D., Lee, Y.J.: Progressive temporal feature alignment network for video inpainting. In: CVPR (2021).<br /><br />
+</p>
